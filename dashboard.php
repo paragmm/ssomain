@@ -8,90 +8,9 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Font Awesome -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-  <style>
-    body {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-    .wrapper {
-      display: flex;
-      flex: 1;
-      overflow: hidden;
-      position: relative;
-    }
-    /* Sidebar */
-    .sidebar {
-      width: 220px;
-      background-color: #343a40;
-      color: #fff;
-      flex-shrink: 0;
-      transition: transform 0.3s ease;
-    }
-    .sidebar .nav-link {
-      color: #adb5bd;
-    }
-    .sidebar .nav-link.active, 
-    .sidebar .nav-link:hover {
-      background-color: #495057;
-      color: #fff;
-    }
-    /* Hide sidebar on small screens */
-    @media (max-width: 991px) {
-      .sidebar {
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        transform: translateX(-100%);
-        z-index: 1051; /* higher than overlay */
-      }
-      .sidebar.show {
-        transform: translateX(0);
-      }
-      /* Overlay */
-      .overlay {
-        position: fixed;
-        top: 0; left: 0; right: 0; bottom: 0;
-        background: rgba(0,0,0,0.5);
-        z-index: 1050;
-        display: none;
-      }
-      .overlay.show {
-        display: block;
-      }
-    }
-    .content {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-    .header {
-      background-color: #fff;
-      border-bottom: 1px solid #dee2e6;
-      padding: 10px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: relative;
-      z-index: 1100; /* ensure toggle stays above sidebar */
-    }
-    .main {
-      flex: 1;
-      padding: 20px;
-      background-color: #f8f9fa;
-      overflow-y: auto;
-    }
-    .footer {
-      background-color: #fff;
-      border-top: 1px solid #dee2e6;
-      padding: 10px;
-      text-align: center;
-    }
-  </style>
+  <link rel="stylesheet" href="style/style.css">
 </head>
-<body>
+<body class="dashboard-body">
 
   <div class="wrapper">
     <!-- Sidebar -->
@@ -99,16 +18,16 @@
       <h4 class="text-center text-white mb-4"><i class="fas fa-user-shield"></i> Admin</h4>
       <ul class="nav nav-pills flex-column mb-auto">
         <li class="nav-item">
-          <a href="#" class="nav-link active"><i class="fas fa-home me-2"></i> Dashboard</a>
+          <a href="dashboard.php" class="nav-link active"><i class="fas fa-home me-2"></i> Dashboard</a>
         </li>
         <li>
-          <a href="#" class="nav-link"><i class="fas fa-users me-2"></i> Users</a>
+          <a href="users.php" class="nav-link"><i class="fas fa-users me-2"></i> Users</a>
         </li>
         <li>
-          <a href="#" class="nav-link"><i class="fas fa-cogs me-2"></i> Settings</a>
+          <a href="settings.php" class="nav-link"><i class="fas fa-cogs me-2"></i> Settings</a>
         </li>
         <li>
-          <a href="#" class="nav-link"><i class="fas fa-chart-bar me-2"></i> Reports</a>
+          <a href="reports.php" class="nav-link"><i class="fas fa-chart-bar me-2"></i> Reports</a>
         </li>
       </ul>
     </nav>
@@ -133,7 +52,7 @@
             <span>Admin</span>
           </a>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
-            <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i> Profile</a></li>
+            <li><a class="dropdown-item" href="profile.php"><i class="fas fa-user me-2"></i> Profile</a></li>
             <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
           </ul>
         </div>
