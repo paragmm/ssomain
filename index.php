@@ -1,9 +1,18 @@
+<?php
+include 'library/db.php';
+include 'library/ssoserver.php';
+$crud = new CRUD();
+$sso = new ssoserver();
+$payload = $sso->validatePayload();
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Login</title>
+  <title><?php echo $payload['status'] === false? $payload['message'] : $payload['data']['client_name'] . ' Login' ?></title>
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Font Awesome -->
@@ -14,15 +23,22 @@
 
   <div class="login-container">
     <!-- Logo (outside panel) -->
-    <div class="login-logo">
-      <i class="fas fa-user-shield fa-4x text-primary"></i>
-      <h3 class="mt-2">Admin Panel</h3>
+    <?php if($payload['status'] === false) { ?>
+    <div class="alert alert-danger" role="alert">
+      <?php echo $payload['message']; ?>
     </div>
-
+    <?php } else { ?>
+    <div class="login-logo">
+      <img src="<?php echo $payload['data']['logo'] ?>" width="150px" alt="Client Logo">
+      <h3 class="mt-2"><?php echo $payload['data']['client_name'] ?></h3>
+    </div>
     <!-- Login Card -->
     <div class="card p-4">
+
       <h4 class="text-center mb-4">Login</h4>
       <form>
+        <input type="hidden" name="id" value="<?php echo $payload['data']['id'] ?>">
+        <input type="hidden" name="id_hash" value="<?php echo md5($payload['data']['id'] . $sso->salt) ?>">
         <div class="mb-3">
           <label for="username" class="form-label">Username</label>
           <div class="input-group">
@@ -46,6 +62,7 @@
         </div>
       </form>
     </div>
+    <?php } ?>
   </div>
 
   <!-- Bootstrap JS -->
