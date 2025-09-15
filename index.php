@@ -4,6 +4,22 @@ include 'library/ssoserver.php';
 $crud = new CRUD();
 $sso = new ssoserver();
 $payload = $sso->validatePayload();
+if($_SERVER['REQUEST_METHOD'] === 'POST') {
+  if(isset($_POST['id'], $_POST['id_hash'], $_POST['username'], $_POST['password']) && md5($_POST['id'] . $sso->salt) === $_POST['id_hash']) {
+    //$sso->checkUser($_POST['username'], $_POST['password']);
+    if($_POST['username'] == '' || $_POST['password'] == ''){
+      $invalid_message = "Username and Password cannot be empty.";
+    } else {
+      $check = $sso->checkUser($_POST['username'], $_POST['password'], $_POST['id'],$_POST['redirect']);
+
+      if($check['status'] === false) {
+        $invalid_message = $check['message'];
+      }
+    }
+  } else {
+    $invalid_message = "Invalid form credentials.";
+  }
+}
 
 ?>
 
@@ -33,17 +49,25 @@ $payload = $sso->validatePayload();
       <h3 class="mt-2"><?php echo $payload['data']['client_name'] ?></h3>
     </div>
     <!-- Login Card -->
+    <?php if(isset($invalid_message)){ ?>
+    <div class="alert alert-warning" role="alert">
+      <strong><?php echo $invalid_message ?></strong>
+    </div>
+    <?php } ?>
+
     <div class="card p-4">
 
       <h4 class="text-center mb-4">Login</h4>
-      <form>
+      <form method="POST" action="">
         <input type="hidden" name="id" value="<?php echo $payload['data']['id'] ?>">
         <input type="hidden" name="id_hash" value="<?php echo md5($payload['data']['id'] . $sso->salt) ?>">
+        <input type="hidden" name="redirect" value="<?php echo $payload['data']['retirect_url'] ?>">
+        <input type="hidden" name="redirect_hash" value="<?php echo md5($payload['data']['retirect_url'] . $sso->salt) ?>">
         <div class="mb-3">
           <label for="username" class="form-label">Username</label>
           <div class="input-group">
             <span class="input-group-text"><i class="fas fa-user"></i></span>
-            <input type="text" class="form-control" id="username" placeholder="Enter username">
+            <input type="text" class="form-control" id="username" name="username" placeholder="Enter username">
           </div>
         </div>
 
@@ -51,7 +75,7 @@ $payload = $sso->validatePayload();
           <label for="password" class="form-label">Password</label>
           <div class="input-group">
             <span class="input-group-text"><i class="fas fa-lock"></i></span>
-            <input type="password" class="form-control" id="password" placeholder="Enter password">
+            <input type="password" class="form-control" name="password" id="password" placeholder="Enter password">
           </div>
         </div>
 

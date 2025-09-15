@@ -55,12 +55,56 @@ class CRUD {
     }
 
     /** READ */
-    public function read($table, $where = "1=1", $fields = "*") {
-        $sql = "SELECT $fields FROM $table WHERE $where";
-        $stmt = $this->pdo->query($sql);
+    // public function read($table, $where = "1=1", $fields = "*") {
+    //     $sql = "SELECT $fields FROM $table WHERE $where";
+    //     $stmt = $this->pdo->query($sql);
+    //     return $stmt->fetchAll();
+    // }
+
+    public function read($table, $where = "1=1", $fields = "*", $joins = []) {
+        $sql = "SELECT $fields FROM $table";
+
+        // Add joins
+        if (!empty($joins)) {
+            foreach ($joins as $join) {
+                $sql .= " {$join['type']} JOIN {$join['table']} ON {$join['on']}";
+            }
+        }
+
+        // Handle WHERE
+        if (is_array($where) && !empty($where)) {
+            $conditions = [];
+            foreach ($where as $col => $val) {
+                $conditions[] = "$col = :$col";
+            }
+            $sql .= " WHERE " . implode(" AND ", $conditions);
+        } else {
+            // Assume string
+            $sql .= " WHERE $where";
+        }
+
+        $stmt = $this->pdo->prepare($sql);
+
+        // Bind params if array
+        if (is_array($where)) {
+            foreach ($where as $col => $val) {
+                $stmt->bindValue(":$col", $val);
+            }
+        }
+
+        $stmt->execute();
         return $stmt->fetchAll();
     }
 
+    // Join users with roles
+    // $data = $crud->read(
+    //     "users u",
+    //     ["u.status" => 1],
+    //     "u.id, u.name, r.role_name",
+    //     [
+    //         ["type" => "INNER", "table" => "roles r", "on" => "u.role_id = r.id"]
+    //     ]
+    // );
     /** UPDATE */
     public function update($table, $data, $where) {
         $setPart = "";
