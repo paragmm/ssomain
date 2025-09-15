@@ -76,9 +76,7 @@ class ssoserver {
                     'message' => 'Invalid credencials. Please try again. (token gen failed)'
                 ];
                 }
-
                 //print_r($insert);
-
 
             } else {
                 return [
